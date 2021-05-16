@@ -130,6 +130,7 @@ $app->post('/api/personal/nuevo', function (Request $request, Response $response
 //guardar cita 
 $app->post('/api/cita/nuevo', function (Request $request, Response $response) {
 
+  $CodigoCita = $request->getParam('CodigoCita');
   $IdentificacionPaciente = $request->getParam('IdentificacionPaciente');
   $NombresPaciente = $request->getParam('NombresPaciente');
   $ApellidosPaciente = $request->getParam('ApellidosPaciente');
@@ -143,12 +144,14 @@ $app->post('/api/cita/nuevo', function (Request $request, Response $response) {
   $FechaCita = $request->getParam('FechaCita');
 
 
-  $sql = "INSERT INTO citas (IdentificacionPaciente, NombresPaciente, ApellidosPaciente, IdentificacionPersonal, NombresPersonal, ApellidosPersonal, TipoPersonal, HoraCita, FechaCita) VALUES 
-          (:IdentificacionPaciente, :NombresPaciente, :ApellidosPaciente, :IdentificacionPersonal, :NombresPersonal, :ApellidosPersonal, :TipoPersonal, :HoraCita, :FechaCita)";
+  $sql = "INSERT INTO citas (CodigoCita, IdentificacionPaciente, NombresPaciente, ApellidosPaciente, IdentificacionPersonal, NombresPersonal, ApellidosPersonal, TipoPersonal, HoraCita, FechaCita) VALUES 
+          (:CodigoCita, :IdentificacionPaciente, :NombresPaciente, :ApellidosPaciente, :IdentificacionPersonal, :NombresPersonal, :ApellidosPersonal, :TipoPersonal, :HoraCita, :FechaCita)";
   try {
     $db = new db();
     $db = $db->conectDB();
     $resultado = $db->prepare($sql);
+
+    $resultado->bindParam(':CodigoCita', $CodigoCita);
     $resultado->bindParam(':IdentificacionPaciente', $IdentificacionPaciente);
     $resultado->bindParam(':NombresPaciente', $NombresPaciente);
     $resultado->bindParam(':ApellidosPaciente', $ApellidosPaciente);
@@ -164,6 +167,31 @@ $app->post('/api/cita/nuevo', function (Request $request, Response $response) {
     $resultado->execute();
     echo json_encode("Cita guardada satisfactoriamente!");
 
+    $resultado = null;
+    $db = null;
+  } catch (PDOException $e) {
+    echo '{"error" : {"text":' . $e->getMessage() . '}';
+  }
+});
+
+
+// GET todas las citas 
+$app->get('/api/citas', function (Request $request, Response $response) {
+  $sql = "SELECT * FROM citas";
+  try {
+    $db = new db();
+    $db = $db->conectDB();
+    $resultado = $db->query($sql);
+
+    if ($resultado->rowCount() > 0) {
+      $clientes = $resultado->fetchAll(PDO::FETCH_OBJ);
+      echo json_encode($clientes);
+    } else {
+      if ($resultado->rowCount() == 0) {
+        $clientes = $resultado->fetchAll(PDO::FETCH_OBJ);
+        echo json_encode($clientes);
+      }
+    }
     $resultado = null;
     $db = null;
   } catch (PDOException $e) {
