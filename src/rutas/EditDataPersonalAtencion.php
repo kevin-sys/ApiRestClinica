@@ -24,7 +24,12 @@
 
     
     $resultado->execute();
-    echo json_encode("personal de atencion modificado.");
+    
+    if ($resultado->rowCount() > 0) {
+      echo json_encode("El personal de atencion fue modificado satisfactoriamente.");
+    } else {
+      echo json_encode("No existe personal con esta identificacion.");
+    }
 
     $resultado = null;
     $db = null;

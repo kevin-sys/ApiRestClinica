@@ -31,7 +31,12 @@
     $resultado->bindParam(':Estado', $Estado);
     
     $resultado->execute();
-    echo json_encode("paciente modificado.");
+    
+    if ($resultado->rowCount() > 0) {
+      echo json_encode("El paciente fue modificado satisfactoriamente.");
+    } else {
+      echo json_encode("No existe paciente con esta identificacion.");
+    }
 
     $resultado = null;
     $db = null;

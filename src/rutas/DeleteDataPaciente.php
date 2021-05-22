@@ -11,7 +11,7 @@ try {
     if ($resultado->rowCount() > 0) {
       echo json_encode("El paciente fue eliminado satisfactoriamente.");
     } else {
-      echo json_encode("No existe paciente con esta Identificacion.");
+      echo json_encode("No existe paciente con esta identificacion.");
     }
 
     $resultado = null;

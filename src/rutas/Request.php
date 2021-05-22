@@ -5,7 +5,7 @@ use \Psr\Http\Message\ResponseInterface as Response;
 //KEVIN GOMEZ CANTILLO 14/11/2020/03:27am
 $app = new \Slim\App;
 
-// GET Todos los pacientes 
+// GET Todos los pacientes. 
 $app->get('/api/paciente', function (Request $request, Response $response) {
   $sql = "SELECT * FROM paciente";
   try {
